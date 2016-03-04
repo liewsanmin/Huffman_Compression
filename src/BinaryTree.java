@@ -1,14 +1,16 @@
-/*
- * BinaryTree.java
- *
- * Created on May 21, 2007, 1:12 PM
- */
-
-package huffman;
 import java.util.*;
 
 /**
- * @author Carrano
+ * Class:           BinaryTree
+ * File:            BinaryTree.java 
+ * Description:     This class holds data for the binary tree which has 
+ *                  HuffmanTree as the child.
+ * Date:            6/11/2015
+ * Course:          CS 143
+ * @author          San Min Liew, Hao Tu, Devin Stoen, Fnu Michael
+ * @version         1.0
+ * Environment:     PC, Windows 8, jdk 1.8.0_20, Netbeans 8.0.1
+ * @see             javax.swing.JFrame
  */
 public class BinaryTree<T> implements BinaryTreeInterface<T> ,
     java.io.Serializable
@@ -36,7 +38,7 @@ public class BinaryTree<T> implements BinaryTreeInterface<T> ,
      * constructor
      * @param rootData data for root node
      * @param leftTree left subtree to attach
-     * @param leftTree right subtree to attach
+     * @param rightTree right subtree to attach
      */
     public BinaryTree (T rootData, BinaryTree<T> leftTree,
             BinaryTree<T> rightTree)
@@ -67,6 +69,7 @@ public class BinaryTree<T> implements BinaryTreeInterface<T> ,
     } // end setTree
 
     /**
+     * Creates a copy of the tree
      * @return copy of the tree
      */
     public BinaryNodeInterface<T> copy ()
@@ -87,16 +90,22 @@ public class BinaryTree<T> implements BinaryTreeInterface<T> ,
     {
         return root.getHeight();
     } // end getHeight
-
+    
     /*
-     * gets the number of nodesw
+     * gets the number of nodes
      * @return numberOfNodes
      */
     public int getNumberOfNodes()
     {
         return root.getNumberOfNodes();
     } // end getNumberOfNodes
- 
+    
+    /**
+     * Privately sets the tree, a helper method 
+     * @param rootData the root data
+     * @param leftTree the left tree 
+     * @param rightTree the right data
+     */
     private void privateSetTree(T rootData, BinaryTree < T > leftTree,
             BinaryTree < T > rightTree)
     {
@@ -107,30 +116,10 @@ public class BinaryTree<T> implements BinaryTreeInterface<T> ,
             root.setRightChild (rightTree.root.copy ());
     } // end privateSetTree
 
-
- 
- // alternative version
-//    private void privateSetTree (T rootData, BinaryTree < T > leftTree,
-//            BinaryTree < T > rightTree)
-//    {
-//        root = new BinaryNode < T > (rootData);
-//        if ((leftTree != null) && !leftTree.isEmpty ())
-//            root.setLeftChild (leftTree.root);
-//        if ((rightTree != null) && !rightTree.isEmpty ())
-//        {
-//            if (rightTree != leftTree)
-//                root.setRightChild (rightTree.root);
-//            else
-//                root.setRightChild (rightTree.root.copy ());
-//        } // end if
-//        if ((leftTree != null) && (leftTree != this))
-//            leftTree.clear ();
-//        if ((rightTree != null) && (rightTree != this))
-//            rightTree.clear ();
-//    } // end privateSetTree
- 
-
-
+    /**
+     * gets the root data
+     * @return the rootData
+     */
     public T getRootData ()
     {
         T rootData = null;
@@ -139,40 +128,55 @@ public class BinaryTree<T> implements BinaryTreeInterface<T> ,
         return rootData;
     } // end getRootData
 
-
+    /**
+     * checks if root node is empty
+     * @return true is root node is empty
+     */
     public boolean isEmpty ()
     {
         return root == null;
     } // end isEmpty
 
-
+    /**
+     * clears the root, set it equal to null
+     */
     public void clear ()
     {
         root = null;
     } // end clear
 
-
+    /**
+     * sets the root data to a new value
+     * @param rootData data to be set
+     */
     protected void setRootData (T rootData)
     {
         root.setData (rootData);
     } // end setRootData
 
-
+    /**
+     * sets the root node with a new root node
+     * @param rootNode the new node replace
+     */
     protected void setRootNode (BinaryNodeInterface < T > rootNode)
     {
         root = rootNode;
     } // end setRootNode
 
-
+    /**
+     * gets the root node
+     * @return the root node
+     */
     protected BinaryNodeInterface<T> getRootNode ()
     {
         return root;
     } // end getRootNode
     
+    /**
+     * traverse the nodes inOrder for testing purposes.
+     */
     public void inorderTraverse ()
     {
-//        StackInterface < BinaryNodeInterface < T >> nodeStack =
-//            new LinkedStack < BinaryNodeInterface < T >> ();
         Stack< BinaryNodeInterface<T>> nodeStack =
                 new Stack<BinaryNodeInterface<T>>();
         BinaryNodeInterface < T > currentNode = root;
@@ -255,7 +259,6 @@ public class BinaryTree<T> implements BinaryTreeInterface<T> ,
         {
             throw new UnsupportedOperationException ();
         }
-
     }
 
    /**

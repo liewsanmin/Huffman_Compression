@@ -1,21 +1,24 @@
-/*
- * HuffmanChar.java
- *
- * Created on May 22, 2007, 5:26 PM
- *
- * To change this template, choose Tools | Template Manager
- * and open the template in the editor.
- */
-
-package huffman;
 import java.io.*;
+
 /**
- *
- * @author pbladek
+ * Class:           HuffmanChar
+ * File:            HuffmanChar.java 
+ * Description:     HuffmanChar extends HuffmanData which has several 
+ *                  constructors, it holds the character and their respective
+ *                  frequencies.
+ * Date:            6/11/2015
+ * Course:          CS 143
+ * @author          San Min Liew, Hao Tu, Devin Stoen, Fnu Michael
+ * @version         1.0
+ * Environment:     PC, Windows 8, jdk 1.8.0_20, Netbeans 8.0.1
+ * @see             javax.swing.JFrame
  */
 public class HuffmanChar extends HuffmanData<Character>
         implements Serializable
-{    
+{  
+    public static final int BITS_IN_BYTE = 8;
+    public static final int BYTE_SIZE_NUMBER = 256;
+  
     /**
      * Creates a new instance of HuffmanChar
      */
@@ -60,10 +63,10 @@ public class HuffmanChar extends HuffmanData<Character>
     public HuffmanChar(byte[] threeBytes)
     {
         super(new Character((char)threeBytes[0]),
-            (((int)threeBytes[2] >= 0 ? (int)threeBytes[2]
-            : (256 + (int)threeBytes[2])) << 8)
-            | ((int)threeBytes[2] >= 0 ? (int)threeBytes[2]
-            : 256 + (int)threeBytes[2]));
+            ((int)threeBytes[2]) >= 0 ? (int)threeBytes[2] |
+                    ((int)threeBytes[1] << BITS_IN_BYTE)
+            : ((BYTE_SIZE_NUMBER + (int)threeBytes[2]) +
+                    ((int)threeBytes[1] << BITS_IN_BYTE)));
     }
     
     /**
@@ -79,5 +82,4 @@ public class HuffmanChar extends HuffmanData<Character>
         ba[2] = (byte)(oc & (byte)(-1));
         return ba; 
     }
-
 }

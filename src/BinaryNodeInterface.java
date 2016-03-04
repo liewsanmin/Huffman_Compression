@@ -1,14 +1,14 @@
-/*
- * BinaryNodeInterface.java
- *
- * Created on May 21, 2007, 1:07 PM
- */
-
-package huffman;
 
 /**
- *
- * @author Carrano
+ * Class:           BinaryNodeInterface
+ * File:            BinaryNodeInterface.java 
+ * Description:     This class is the Interface for BinaryNode class.
+ * Date:            6/11/2015
+ * Course:          CS 143
+ * @author          San Min Liew, Hao Tu, Devin Stoen, Fnu Michael
+ * @version         1.0
+ * Environment:     PC, Windows 8, jdk 1.8.0_20, Netbeans 8.0.1
+ * @see             javax.swing.JFrame
  */
 interface BinaryNodeInterface< T >
 {
@@ -49,7 +49,8 @@ interface BinaryNodeInterface< T >
     public boolean isLeaf ();
     
     /** Task: Counts the nodes in the subtree rooted at this node.
-    *@returnthenumberof nodes in the subtree rooted at this node */
+     *  @return the number of nodes in the subtree rooted at this node 
+     */
     public int getNumberOfNodes ();
     
     /** Task: Computes the height of the subtree rooted at this node.

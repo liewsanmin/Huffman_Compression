@@ -1,14 +1,14 @@
-/*
- * HuffmanData.java
- *
- * Created on May 21, 2007, 2:17 PM
- */
-
-package huffman;
-import java.lang.*;
 
 /**
- * @author pbladek
+ * Class:           HuffmanData
+ * File:            HuffmanData.java 
+ * Description:     The class for holding the data of character and
+ *                  its occurring frequency.
+ * Date:            6/14/2015
+ * Course:          CS 143
+ * @author          San Min Liew, Hao TU, Devin Stoen, Fnu Michael
+ * @version         1.0
+ * Environment:     PC, Windows 8, jdk 1.8.0_20, Netbeans 8.0.1
  */
 public class HuffmanData<T extends Comparable<? super T>>
         implements Comparable<HuffmanData<T>>
@@ -40,8 +40,8 @@ public class HuffmanData<T extends Comparable<? super T>>
     }
     
     /*
-     * accessor
-     * @return data
+     * accessor for the data
+     * @return data - huffchar instance
      */
     public T getData()
     {
@@ -49,8 +49,8 @@ public class HuffmanData<T extends Comparable<? super T>>
     }
     
     /*
-     * accessor
-     * @return occurances
+     * accessor to the occurance
+     * @return occurances - frequency of character
      */
     public int getOccurances()
     {
@@ -58,19 +58,19 @@ public class HuffmanData<T extends Comparable<? super T>>
     }
     
     /**
-     *
+     * compares the parameter and actual HuffmanData
      * @param o the other HuffmanData
-     * @return -1 if <, 0 if ==, 1 if >
+     * @return -1 if less than, 0 if equals, 1 if more than
      */
-
     public int compareTo(HuffmanData<T> o)
     {
         return (occurances < o.occurances)? -1
                 : (occurances == o.occurances)? 0 : 1;
     }
     
-    /*
-     * @return strng version of class
+    /**
+     * returns the string version of class
+     * @return string version of class
      */
     public String toString()
     {
@@ -79,5 +79,4 @@ public class HuffmanData<T extends Comparable<? super T>>
             dataString = data.toString(); 
         return dataString + ": " + occurances + " ";
     }
-    
 }

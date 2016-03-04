@@ -1,16 +1,18 @@
-/*
- * BinaryNode.java
- *
- * Created on May 21, 2007, 1:08 PM
- */
-
-package huffman;
 import java.io.*;
+
 /**
- *
- * @author Carrano
+ * Class:           BinaryNode
+ * File:            BinaryNode.java 
+ * Description:     This class has the nodes, leftNode and rightNode
+ * Date:            6/11/2015
+ * Course:          CS 143
+ * @author          San Min Liew, Hao Tu, Devin Stoen, Fnu Michael
+ * @version         1.0
+ * Environment:     PC, Windows 8, jdk 1.8.0_20, Netbeans 8.0.1
+ * @see             javax.swing.JFrame
  */
-public class  BinaryNode < T > implements BinaryNodeInterface < T >, Serializable
+public class BinaryNode < T > implements BinaryNodeInterface < T >,
+        Serializable
 {
     private T data;
     private BinaryNode < T > left;
@@ -24,7 +26,6 @@ public class  BinaryNode < T > implements BinaryNodeInterface < T >, Serializabl
         this (null);  // call next constructor
     } // end default constructor
 
- 
     /**
      * constructor
      * @param dataPortion the data portion
@@ -36,74 +37,105 @@ public class  BinaryNode < T > implements BinaryNodeInterface < T >, Serializabl
 
     /**
      * constructor
-     * @param leftChild
-     * @param rightChild
+     * @param leftChild the leftChild
+     * @param rightChild the rightChild
+     * @param dataPortion the data portion 
      */
-    public BinaryNode (T dataPortion, BinaryNode < T > leftChild, BinaryNode < T > rightChild)
+    public BinaryNode (T dataPortion, BinaryNode < T > leftChild, 
+                       BinaryNode < T > rightChild)
     {
         data = dataPortion;
         left = leftChild;
         right = rightChild;
     } // end constructor
 
-
+    /**
+     * Accessor to access data
+     * @return data -- the data
+     */
     public T getData ()
     {
         return data;
     } // end getData
 
-
+    /**
+     * Mutate the data
+     * @param newData the new data to be set
+     */
     public void setData (T newData)
     {
         data = newData;
     } // end setData
 
-
+    /**
+     * access the leftChild
+     * @return left -- the leftNode
+     */
     public BinaryNodeInterface < T > getLeftChild ()
     {
         return left;
     } // end getLeftChild
 
-
+    /**
+     * Mutates the leftChild
+     * @param leftChild leftNode to be mutated
+     */
     public void setLeftChild (BinaryNodeInterface < T > leftChild)
     {
         left = (BinaryNode < T > ) leftChild;
     } // end setLeftChild
 
-
+    /**
+     * Check if left is null or not
+     * @return boolean if leftNode is false or true
+     */
     public boolean hasLeftChild ()
     {
         return left != null;
     } // end hasLeftChild
 
-
+    /**
+     * Check if current node is leaf 
+     * @return true if node is leaf
+     */
     public boolean isLeaf ()
     {
         return (left == null) && (right == null);
     } // end isLeaf
 
-
+    /**
+     * access right child
+     * @return right -- the right node
+     */
     public BinaryNodeInterface < T > getRightChild ()
     {
         return right;
     } // end getRightChild
 
-
+    /**
+     * Sets the right child
+     * @param rightChild -- right node to mutated
+     */
     public void setRightChild (BinaryNodeInterface < T > rightChild)
     {
         right = (BinaryNode < T > ) rightChild;
     } // end setRightChild
 
-
+    /**
+     * checks if it has a right child
+     * @return the right node
+     */
     public boolean hasRightChild ()
     {
         return right != null;
     } // end hasRightChild
 
-
-    // Implementations of getRightChild, setRightChild, and hasRightChild are analogous to
-    // their left-child counterparts.
-
+    // Implementations of getRightChild, setRightChild, and hasRightChild 
+    //are analogous to their left-child counterparts.
+    /**
+     * Make a copy of the root node
+     * @return newRoot -- the exact copy
+     */
     public BinaryNodeInterface < T > copy ()
     {
         BinaryNode < T > newRoot = new BinaryNode < T > (data);
@@ -113,25 +145,21 @@ public class  BinaryNode < T > implements BinaryNodeInterface < T >, Serializabl
             newRoot.right = (BinaryNode < T > ) right.copy ();
         return newRoot;
     } // end copy
-
-
-//    private void privateSetTree (T rootData, BinaryTree < T > leftTree,
-//            BinaryTree < T > rightTree)
-//    {
-//        root = new BinaryNode < T > (rootData);
-//        if ((leftTree != null) && !leftTree.isEmpty ())
-//            root.setLeftChild (leftTree.root.copy ());
-//        if ((rightTree != null) && !rightTree.isEmpty ())
-//            root.setRightChild (rightTree.root.copy ());
-//    } // end privateSetTree
-
-
+    
+    /**
+     * Gets the height of tree
+     * @return getHeight(this) the helper method
+     */
     public int getHeight ()
     {
         return getHeight (this); // call private getHeight
     } // end getHeight
 
-
+    /**
+     * Gets the height of tree
+     * @param node the root node
+     * @return height -- the height of the tree
+     */
     private int getHeight (BinaryNode < T > node)
     {
         int height = 0;
@@ -141,7 +169,10 @@ public class  BinaryNode < T > implements BinaryNodeInterface < T >, Serializabl
         return height;
     } // end getHeight
 
-
+    /**
+     * Gets the total number of nodes
+     * @return the total number of nodes
+     */
     public int getNumberOfNodes ()
     {
         int leftNumber = 0;

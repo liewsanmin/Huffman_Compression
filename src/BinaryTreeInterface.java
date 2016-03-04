@@ -1,13 +1,14 @@
-/*
- * BinaryTreeInterface.java
- *
- * Created on May 21, 2007, 1:17 PM
- */
-
-package huffman;
 
 /**
- * @author Carranno
+ * Class:           BinaryTreeInterface
+ * File:            BinaryTreeInterface.java 
+ * Description:     This class is an interface for BinaryTree class
+ * Date:            6/11/2015
+ * Course:          CS 143
+ * @author          San Min Liew, Hao Tu, Devin Stoen, Fnu Michael
+ * @version         1.0
+ * Environment:     PC, Windows 8, jdk 1.8.0_20, Netbeans 8.0.1
+ * @see             javax.swing.JFrame
  */
 public interface BinaryTreeInterface < T > extends TreeInterface<T>,
     TreeIteratorInterface<T>
@@ -23,6 +24,5 @@ public interface BinaryTreeInterface < T > extends TreeInterface<T>,
     * @param rightTree the right subtree of the new tree */
     public void setTree (T rootData, BinaryTreeInterface < T > leftTree,
             BinaryTreeInterface < T > rightTree);
-
 }
 

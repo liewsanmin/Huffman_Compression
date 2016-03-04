@@ -1,4 +1,3 @@
-package Huffman;
 
 import java.io.*;
 import java.text.DecimalFormat;

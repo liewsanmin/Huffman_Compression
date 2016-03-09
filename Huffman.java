@@ -3,6 +3,7 @@ import java.text.DecimalFormat;
 import java.util.SortedMap;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import java.util.ArrayList;
 
 /**
  * Class:           Huffman
@@ -24,7 +25,7 @@ public class Huffman
     private HuffmanTree<Character> theTree;
     private byte[] saveDataArray;
     HuffmanChar[] charCountArray;
-    private final char END_OF_FILE= '\u001a';
+    private final char END_OF_FILE = '\u001a';
     private static File hufFile;
     private static File codFile;
     
@@ -356,64 +357,102 @@ public class Huffman
     public void writeEncodedFile(byte[] bytes, String fileName)
     {
         final int MAX_BYTE_SIZE_IN_BIT = 8;
-        String binary = "";
+
+        /* initialize for put in length of 8 algorithm */
+        ArrayList<String> binary_array = new ArrayList<String>();
+        binary_array.add("");
+        int current_length = 0;
+        String add_string = "";
+
         SortedMap myMap = theTree.getCodeMap();
         try
         {
             FileReader freader = new FileReader(fileName);
             BufferedReader inputFile = new BufferedReader(freader);
-            
+            String temp_line;
             String line = inputFile.readLine();
-            for (char temp : line.toCharArray())
-            {   
-                binary += myMap.get(temp).toString();
-            }
-            line = inputFile.readLine();
+
             while(line != null)
             {
-                line = "\n" + line;
-                for (char temp : line.toCharArray())
-                {   
-                    binary += myMap.get(temp).toString();
-                }
+                temp_line = line;
                 line = inputFile.readLine();
+                if(line != null)
+                    temp_line += "\n";
+                else
+                    temp_line += END_OF_FILE;
+
+                for (char temp : temp_line.toCharArray())
+                {   
+                    add_string = myMap.get(temp).toString();
+
+
+                    /* huffman algorithm start here */
+                    while(add_string != "")
+                    {
+
+                        /* last time didn't fill up the element, set more string in there */
+                        if(current_length < MAX_BYTE_SIZE_IN_BIT)
+                        {
+                            if(current_length + add_string.length() <= MAX_BYTE_SIZE_IN_BIT)
+                            {
+                                binary_array.set(binary_array.size()-1,
+                                    binary_array.get(binary_array.size()-1) + add_string);
+                                add_string = "";
+                            }
+                            else //case for length over
+                            {
+                                binary_array.set(binary_array.size()-1,
+                                        binary_array.get(binary_array.size()-1) 
+                                        + add_string.substring(0, 
+                                        MAX_BYTE_SIZE_IN_BIT - current_length));
+
+                                add_string = add_string.substring(MAX_BYTE_SIZE_IN_BIT 
+                                            - current_length, add_string.length());
+                            }
+                        }
+                        else //case for equal just add another element of arraylist
+                        {
+                            // case for add_string length > 8 distribute to next iteration
+                            if(add_string.length() > MAX_BYTE_SIZE_IN_BIT)
+                            {
+                                binary_array.add(add_string.substring(0, MAX_BYTE_SIZE_IN_BIT));
+                                add_string = add_string.substring(MAX_BYTE_SIZE_IN_BIT,
+                                             add_string.length());
+                            }
+                            else // case for smaller than 8
+                            {
+                                binary_array.add(add_string);
+                                add_string = "";
+                            }
+                        }
+                        current_length = (binary_array.get(binary_array.size()-1)).length();    
+                    }
+                }
             }
-            binary += myMap.get(END_OF_FILE).toString();
+            
         }
         catch (IOException ex)
         {}
         
-        if(!binary.isEmpty())
+        if(!((binary_array.size() == 1) && (binary_array.get(0) == "")))
         {
-            if(binary.length() % MAX_BYTE_SIZE_IN_BIT == 0)
-                bytes = new byte[binary.length() / MAX_BYTE_SIZE_IN_BIT];
-            else
-                bytes = new byte[binary.length() / MAX_BYTE_SIZE_IN_BIT + 1];
+            bytes = new byte[binary_array.size()];
             
+            int i;
+            String eightBinary;
             //every eight bit of binary put in the byte array
-            for(int i = 0; i < bytes.length; i++)
+            for( i = 0; i < bytes.length - 1 ; i++)
             {
-                String eightBinary;
-                int lengthDiff = (i + 1) * MAX_BYTE_SIZE_IN_BIT - 
-                                 binary.length();
-                if(lengthDiff > 0)
-                {
-                    for(int z = 0; z < lengthDiff; z++)
-                    {
-                        binary += "0";
-                    }
-                    eightBinary = binary.substring(i * MAX_BYTE_SIZE_IN_BIT);
-                    byte currentByte = (byte) Integer.parseInt(eightBinary, 2);
-                    bytes[i] = currentByte;
-                }
-                else
-                {
-                    eightBinary = binary.substring(i * MAX_BYTE_SIZE_IN_BIT, 
-                                  (i + 1) * MAX_BYTE_SIZE_IN_BIT);
-                    byte currentByte = (byte)Integer.parseInt(eightBinary, 2);
-                    bytes[i] = currentByte;
-                }
-            }      
+                eightBinary = binary_array.get(i);  
+                bytes[i] = (byte) Integer.parseInt(eightBinary, 2);
+            }
+            // operation for last index add trailing zeros
+            eightBinary = binary_array.get(i);
+            int lengthDiff = MAX_BYTE_SIZE_IN_BIT - eightBinary.length();
+            for(int z = 0; z < lengthDiff; z++)
+                eightBinary += "0";
+            bytes[i] = (byte) Integer.parseInt(eightBinary, 2);
+
             try
             {
                 //create the file with replace extention

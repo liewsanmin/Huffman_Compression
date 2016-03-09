@@ -1,4 +1,3 @@
-
 /**
  * Class:           BinaryNodeInterface
  * File:            BinaryNodeInterface.java 

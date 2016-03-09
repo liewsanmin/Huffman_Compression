@@ -1,4 +1,3 @@
-
 /**
  * Class:           HuffmanData
  * File:            HuffmanData.java 

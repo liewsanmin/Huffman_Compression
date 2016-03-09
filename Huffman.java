@@ -1,4 +1,3 @@
-
 import java.io.*;
 import java.text.DecimalFormat;
 import java.util.SortedMap;
@@ -44,6 +43,13 @@ public class Huffman
         // JFileChooser
         boolean decode = false;
         
+        // for tracking efficiency           
+        double start_time;
+        double end_time;
+
+        //factor
+        final double NANO_TO_SEC = 1000000000;
+
         String textFileName = "";
         File file = new File("12.txt");
         if(args.length > 0)
@@ -102,8 +108,7 @@ public class Huffman
                 chooser.setCurrentDirectory(file.getAbsoluteFile().
                                             getParentFile());
 
-                int returnVal = chooser.showOpenDialog(null);
-                if(returnVal == JFileChooser.APPROVE_OPTION) 
+                if(chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) 
                 {
                     file = chooser.getSelectedFile();
                     textFileName = file.getName();
@@ -116,8 +121,13 @@ public class Huffman
             
             if (!file.canExecute())
                  System.exit(0);
+            start_time = (double) System.nanoTime();
             coder.encode(textFileName);
+            end_time = (double) System.nanoTime();
             displayCompressionRate(file, textFileName);
+            System.out.println("The program takes " 
+                + (end_time - start_time)/ NANO_TO_SEC
+                + " seconds to encode");
         }
     }
 
@@ -345,7 +355,7 @@ public class Huffman
      */ 
     public void writeEncodedFile(byte[] bytes, String fileName)
     {
-        int MAX_BYTE_SIZE_IN_BIT = 8;
+        final int MAX_BYTE_SIZE_IN_BIT = 8;
         String binary = "";
         SortedMap myMap = theTree.getCodeMap();
         try
@@ -473,13 +483,14 @@ public class Huffman
     private static void displayCompressionRate(File file, String textFileName)
     {
         DecimalFormat decimal = new DecimalFormat("#.##");
-            // printing out the compression ratio:
-            double compressionRate = ((double)hufFile.length()
-                                     / file.length()) * 100;
-            String hufFileName = textFileName.replace(".txt", ".huf");
-            System.out.println(hufFileName + " : " + 
-                               decimal.format(compressionRate) +
-                               "% compression");
+        // printing out the compression ratio:
+        double compressionRate = ((double)hufFile.length()
+                                 / file.length()) * 100;
+        String hufFileName = textFileName.replace(".txt", ".huf");
+        System.out.println(hufFileName + " : " + 
+                           decimal.format(compressionRate) +
+                           "% compression");
+
     }
     
     /**

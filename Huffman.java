@@ -22,6 +22,7 @@ import java.util.ArrayList;
 public class Huffman
 {   
     public static final int CHARMAX = 128;
+    public static final int UNIMAX = 65534;
     private HuffmanTree<Character> theTree;
     private byte[] saveDataArray;
     HuffmanChar[] charCountArray;
@@ -151,15 +152,20 @@ public class Huffman
     public void encode(String fileName)
     {
         int huffmanCharSize = 0;
+        // int[] charFrequency = new int[CHARMAX];
         int[] charFrequency = new int[CHARMAX];
         try
         {
-            FileReader freader = new FileReader(fileName);
+            FileInputStream stream = new FileInputStream(fileName);
+            InputStreamReader freader = new InputStreamReader(stream);
+            // InputStreamReader freader = new InputStreamReader(stream, "UTF-8");
             BufferedReader inputFile = new BufferedReader(freader);
+            
             
             String line = inputFile.readLine();
             for (char temp : line.toCharArray())
             {   
+                // System.out.println("Char ASC is: " + (int)temp);
                 charFrequency[temp]++;
             }
             line = inputFile.readLine();
@@ -168,6 +174,7 @@ public class Huffman
                 line = "\n" + line;
                 for (char temp : line.toCharArray())
                 {   
+                    // System.out.println("Char ASC is: " + (int)temp);
                     charFrequency[temp]++;
                 }
                 line = inputFile.readLine();
@@ -233,13 +240,15 @@ public class Huffman
      */
     private void writeDecodedTextFile(ArrayList<String> binary_array, String hufFileName) 
     {
-        File decodeTextFile = new File(hufFileName.replace(".huf", "x.txt"));
+
         String charInBinary = "";
         String currentLine = "";
-        PrintWriter pWriter;
         try 
         {
-            pWriter = new PrintWriter(decodeTextFile);
+            FileOutputStream stream = new FileOutputStream(hufFileName.replace(".huf", "x.txt"));
+            OutputStreamWriter fwriter = new  OutputStreamWriter(stream);
+            BufferedWriter pWriter = new BufferedWriter(fwriter);
+            // pWriter = new PrintWriter(decodeTextFile);
             for(int j = 0; j < binary_array.size(); j++)
             {
                 String decodeBinary = binary_array.get(j);
@@ -254,7 +263,10 @@ public class Huffman
                         {
                             if (leafChar == '\n') // adss line by line
                             {
-                                pWriter.println(currentLine);
+                                // pWriter.println(currentLine);
+
+                                pWriter.write(currentLine);
+                                pWriter.newLine();
                                 currentLine = "";
                             }
                             else
@@ -262,7 +274,8 @@ public class Huffman
                         }
                         else
                         {
-                            pWriter.print(currentLine);
+                            // pWriter.print(currentLine);
+                            pWriter.write(currentLine);
                             pWriter.close();
                         }
 
@@ -271,8 +284,9 @@ public class Huffman
                     }
                 }
             }
-        } catch (FileNotFoundException ex)
+        } catch (IOException ex)
         {}
+
     }
     
     /**

@@ -12,10 +12,10 @@ import java.util.ArrayList;
  *                  and create a huf and cod file while encoding. During decode
  *                  mode, it loads the cod file and decompresses the huf file
  *                  to create an original text.
- * Date:            6/11/2015
+ * Date:            3/10/2016
  * Course:          CS 143
  * @author          San Min Liew, Hao Tu, Devin Stoen, Fnu Michael
- * @version         1.0
+ * @version         2.0
  * Environment:     PC, Windows 8, jdk 1.8.0_20, Netbeans 8.0.1
  * @see             javax.swing.JFrame
  */
@@ -28,7 +28,10 @@ public class Huffman
     private final char END_OF_FILE = '\u001a';
     private static File hufFile;
     private static File codFile;
-    
+            
+    private static final int MAX_BYTE_SIZE_IN_BIT = 8;
+
+
     /**
      * Creates a new instance of Main
      */
@@ -214,9 +217,9 @@ public class Huffman
             loadHuffmanChar(codFile); // need the tree to get key map
         
         readHufFile(inFileName);    
-        String decodeBinary = getDecodeBinary(saveDataArray);
+        ArrayList<String> binary_array = getDecodeBinary(saveDataArray);
         
-        writeDecodedTextFile(decodeBinary, inFileName); // creates text file
+        writeDecodedTextFile(binary_array, inFileName); // creates text file
     }
     
     /**
@@ -228,7 +231,7 @@ public class Huffman
      * @param hufFileName the huf file chosen by user, we need this to get the
      *                    the title and change the extension from there
      */
-    private void writeDecodedTextFile(String decodeBinary, String hufFileName) 
+    private void writeDecodedTextFile(ArrayList<String> binary_array, String hufFileName) 
     {
         File decodeTextFile = new File(hufFileName.replace(".huf", "x.txt"));
         String charInBinary = "";
@@ -237,31 +240,35 @@ public class Huffman
         try 
         {
             pWriter = new PrintWriter(decodeTextFile);
-            for (int i = 0; i < decodeBinary.length(); i++)
+            for(int j = 0; j < binary_array.size(); j++)
             {
-                charInBinary += decodeBinary.charAt(i);
-                if (theTree.getKeyMap().get(charInBinary) != null)
+                String decodeBinary = binary_array.get(j);
+                for (int i = 0; i < decodeBinary.length(); i++)
                 {
-                    // do the checking and adding
-                    char leafChar = theTree.getKeyMap().get(charInBinary);
-                    if(leafChar != END_OF_FILE)
+                    charInBinary += decodeBinary.charAt(i);
+                    if (theTree.getKeyMap().get(charInBinary) != null)
                     {
-                        if (leafChar == '\n') // adss line by line
+                        // do the checking and adding
+                        char leafChar = theTree.getKeyMap().get(charInBinary);
+                        if(leafChar != END_OF_FILE)
                         {
-                            pWriter.println(currentLine);
-                            currentLine = "";
+                            if (leafChar == '\n') // adss line by line
+                            {
+                                pWriter.println(currentLine);
+                                currentLine = "";
+                            }
+                            else
+                                currentLine += leafChar;
                         }
                         else
-                            currentLine += leafChar;
-                    }
-                    else
-                    {
-                        pWriter.print(currentLine);
-                        pWriter.close();
-                    }
+                        {
+                            pWriter.print(currentLine);
+                            pWriter.close();
+                        }
 
-                    // refresh charInBinary
-                    charInBinary = "";
+                        // refresh charInBinary
+                        charInBinary = "";
+                    }
                 }
             }
         } catch (FileNotFoundException ex)
@@ -274,16 +281,19 @@ public class Huffman
      * @param byteArray - the binary byte read from the huff file
      * @return String - 
      */
-    private String getDecodeBinary(byte[] byteArray)
+    private ArrayList<String> getDecodeBinary(byte[] byteArray)
     {
-        String decodeBinary = "";
+        ArrayList<String> binary_array = new ArrayList<String>();
+
         for (int i = 0; i < byteArray.length; i++)
         {
             byte currentInt = byteArray[i];
+
             String eightBinary = Integer.toBinaryString(currentInt);
+
             if((int)currentInt >= 0)
             {
-                int lengthDiff = 8 - eightBinary.length();
+                int lengthDiff = MAX_BYTE_SIZE_IN_BIT - eightBinary.length();
                 if( lengthDiff > 0)
                 {
                     for(int j = 0; j < lengthDiff; j++)
@@ -294,9 +304,10 @@ public class Huffman
             }
             else
                 eightBinary = eightBinary.substring(24);
-            decodeBinary += eightBinary;
+
+            binary_array.add(eightBinary);
         }
-       return decodeBinary;
+        return binary_array;
     }
     
     /**
@@ -365,7 +376,6 @@ public class Huffman
      */ 
     public void writeEncodedFile(byte[] bytes, String fileName)
     {
-        final int MAX_BYTE_SIZE_IN_BIT = 8;
 
         /* initialize for put in length of 8 algorithm */
         ArrayList<String> binary_array = new ArrayList<String>();

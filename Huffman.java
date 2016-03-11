@@ -21,16 +21,16 @@ import java.util.ArrayList;
  */
 public class Huffman
 {   
-    public static final int CHARMAX = 128;
-    public static final int UNIMAX = 65534;
+    public static final int CHARMAX = 256;
     private HuffmanTree<Character> theTree;
     private byte[] saveDataArray;
     HuffmanChar[] charCountArray;
-    private final char END_OF_FILE = '\u001a';
+    private final char END_OF_FILE = '\u0003';
     private static File hufFile;
     private static File codFile;
-            
+    // for text file
     private static final int MAX_BYTE_SIZE_IN_BIT = 8;
+    // for unicode file
 
 
     /**
@@ -152,20 +152,17 @@ public class Huffman
     public void encode(String fileName)
     {
         int huffmanCharSize = 0;
-        // int[] charFrequency = new int[CHARMAX];
         int[] charFrequency = new int[CHARMAX];
         try
         {
             FileInputStream stream = new FileInputStream(fileName);
             InputStreamReader freader = new InputStreamReader(stream);
-            // InputStreamReader freader = new InputStreamReader(stream, "UTF-8");
             BufferedReader inputFile = new BufferedReader(freader);
             
             
             String line = inputFile.readLine();
             for (char temp : line.toCharArray())
             {   
-                // System.out.println("Char ASC is: " + (int)temp);
                 charFrequency[temp]++;
             }
             line = inputFile.readLine();
@@ -174,12 +171,12 @@ public class Huffman
                 line = "\n" + line;
                 for (char temp : line.toCharArray())
                 {   
-                    // System.out.println("Char ASC is: " + (int)temp);
                     charFrequency[temp]++;
                 }
                 line = inputFile.readLine();
             }
             charFrequency[END_OF_FILE]++;
+
         }
         catch (IOException ex)
         {}
@@ -192,7 +189,6 @@ public class Huffman
                 huffmanCharSize++;
             }
         }
-        
         charCountArray = new HuffmanChar[huffmanCharSize];
         int count = 0;
         for (int i = 0; i < charFrequency.length; i++) 
@@ -204,7 +200,8 @@ public class Huffman
               count++;
             }
         }
-        
+
+
         bubbleSort(charCountArray); // sorts HuffmanChar array
         theTree = new HuffmanTree(charCountArray); // pass in to HuffmanTree
         createKeyByteArray(fileName, charCountArray, huffmanCharSize); 
@@ -248,7 +245,7 @@ public class Huffman
             FileOutputStream stream = new FileOutputStream(hufFileName.replace(".huf", "x.txt"));
             OutputStreamWriter fwriter = new  OutputStreamWriter(stream);
             BufferedWriter pWriter = new BufferedWriter(fwriter);
-            // pWriter = new PrintWriter(decodeTextFile);
+
             for(int j = 0; j < binary_array.size(); j++)
             {
                 String decodeBinary = binary_array.get(j);
@@ -263,8 +260,6 @@ public class Huffman
                         {
                             if (leafChar == '\n') // adss line by line
                             {
-                                // pWriter.println(currentLine);
-
                                 pWriter.write(currentLine);
                                 pWriter.newLine();
                                 currentLine = "";
@@ -274,7 +269,6 @@ public class Huffman
                         }
                         else
                         {
-                            // pWriter.print(currentLine);
                             pWriter.write(currentLine);
                             pWriter.close();
                         }
@@ -305,6 +299,8 @@ public class Huffman
 
             String eightBinary = Integer.toBinaryString(currentInt);
 
+            // only when unicode
+
             if((int)currentInt >= 0)
             {
                 int lengthDiff = MAX_BYTE_SIZE_IN_BIT - eightBinary.length();
@@ -313,11 +309,14 @@ public class Huffman
                     for(int j = 0; j < lengthDiff; j++)
                     {
                         eightBinary = "0" + eightBinary;
-                    }   
+                    } 
+                    
                 }
             }
             else
                 eightBinary = eightBinary.substring(24);
+
+            System.err.println(eightBinary);//test 
 
             binary_array.add(eightBinary);
         }
@@ -400,8 +399,11 @@ public class Huffman
         SortedMap myMap = theTree.getCodeMap();
         try
         {
-            FileReader freader = new FileReader(fileName);
+            FileInputStream stream = new FileInputStream(fileName);
+            InputStreamReader freader = new InputStreamReader(stream);
             BufferedReader inputFile = new BufferedReader(freader);
+            
+
             String temp_line;
             String line = inputFile.readLine();
 
@@ -424,7 +426,6 @@ public class Huffman
                 for (char temp : temp_line.toCharArray())
                 {   
                     add_string = myMap.get(temp).toString();
-
 
                     /* huffman algorithm start here */
                     while(add_string != "")
@@ -484,13 +485,21 @@ public class Huffman
             for( i = 0; i < bytes.length - 1 ; i++)
             {
                 eightBinary = binary_array.get(i);  
+                
+                System.err.println(eightBinary);//test
+
                 bytes[i] = (byte) Integer.parseInt(eightBinary, 2);
             }
             // operation for last index add trailing zeros
             eightBinary = binary_array.get(i);
             int lengthDiff = MAX_BYTE_SIZE_IN_BIT - eightBinary.length();
+
+
             for(int z = 0; z < lengthDiff; z++)
                 eightBinary += "0";
+
+            System.err.println(eightBinary);//test
+
             bytes[i] = (byte) Integer.parseInt(eightBinary, 2);
 
             try

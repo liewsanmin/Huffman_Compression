@@ -41,7 +41,7 @@ public class HuffmanTree<T extends Comparable<? super T>>
         buildTree(dataArray); 
         keyMap = new TreeMap<String, T>();
         codeMap = new TreeMap<T, String>();
-       
+
         for(int i = 0; i < dataArray.length; i++)
         {
             String binaryPath = findPath((HuffmanData<T>) dataArray[i], 

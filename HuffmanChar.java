@@ -4,7 +4,7 @@ import java.io.*;
  * Class:           HuffmanChar
  * File:            HuffmanChar.java 
  * Description:     HuffmanChar extends HuffmanData which has several 
- *                  constructors, it holds the character and their respective
+ *                  constructors, it holds the char and their respective
  *                  frequencies.
  * Date:            6/11/2015
  * Course:          CS 143
@@ -16,8 +16,13 @@ import java.io.*;
 public class HuffmanChar extends HuffmanData<Character>
         implements Serializable
 {  
+    //if is for txt file
     public static final int BITS_IN_BYTE = 8;
     public static final int BYTE_SIZE_NUMBER = 256;
+
+    //if is for Unicode
+    // public static final int BITS_IN_BYTE = 16;
+    // public static final int BYTE_SIZE_NUMBER = 65536;
   
     /**
      * Creates a new instance of HuffmanChar
@@ -29,7 +34,7 @@ public class HuffmanChar extends HuffmanData<Character>
     
     /**
      *  Creates a new instance of HuffmanChar
-     * @param c the character
+     * @param c the char
      */
     public HuffmanChar(Character c)
     {
@@ -38,7 +43,7 @@ public class HuffmanChar extends HuffmanData<Character>
 
     /**
      * Creates a new instance of HuffmanChar
-     * @param c the character
+     * @param c the char
      * @param oc the number of occurances
      */
 
@@ -78,7 +83,7 @@ public class HuffmanChar extends HuffmanData<Character>
         byte[] ba = new byte[3];
         ba[0] = (byte)(getData().charValue());
         short oc = (short)getOccurances();
-        ba[1] = (byte)(oc >> 8);
+        ba[1] = (byte)(oc >> BITS_IN_BYTE);
         ba[2] = (byte)(oc & (byte)(-1));
         return ba; 
     }

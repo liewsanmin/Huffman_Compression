@@ -44,9 +44,7 @@ public class Huffman
         // JFileChooser
         boolean decode = false;
         
-        // for tracking efficiency           
-        double start_time;
-        double end_time;
+
 
         //factor
         final double NANO_TO_SEC = 1000000000;
@@ -95,7 +93,15 @@ public class Huffman
             }
             try 
             {
+                /* checking efficiency */
+                double start_decode = (double) System.nanoTime();
+
                 coder.decode(textFileName);
+
+                double end_decode = (double) System.nanoTime();
+                System.out.println("Decode time: " 
+                    + (end_decode - start_decode)/ NANO_TO_SEC
+                    + " seconds");
             } catch (FileNotFoundException ex) {}
         }
         else
@@ -122,13 +128,16 @@ public class Huffman
             
             if (!file.canExecute())
                  System.exit(0);
-            start_time = (double) System.nanoTime();
+
+
+             // for tracking efficiency           
+            double start_encode = (double) System.nanoTime();
             coder.encode(textFileName);
-            end_time = (double) System.nanoTime();
+            double end_encode = (double) System.nanoTime();
+            System.out.println("Encode time: " 
+                + (end_encode - start_encode)/ NANO_TO_SEC
+                + " seconds");
             displayCompressionRate(file, textFileName);
-            System.out.println("The program takes " 
-                + (end_time - start_time)/ NANO_TO_SEC
-                + " seconds to encode");
         }
     }
 
@@ -376,10 +385,17 @@ public class Huffman
             {
                 temp_line = line;
                 line = inputFile.readLine();
-                if(line != null)
-                    temp_line += "\n";
+                
+                // for dealing with the last line in the file
+                if(line == null)
+                {
+                    if(temp_line.equals(""))
+                        temp_line += "\n" + END_OF_FILE;
+                    else
+                        temp_line += END_OF_FILE;
+                }
                 else
-                    temp_line += END_OF_FILE;
+                    temp_line += "\n";
 
                 for (char temp : temp_line.toCharArray())
                 {   
